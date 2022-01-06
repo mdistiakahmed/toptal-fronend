@@ -1,0 +1,36 @@
+
+.cardContainer {
+    background-color: rgb(251, 236, 249);
+    border-radius: 11px;
+    padding: 2rem 2rem;
+    margin: 1.5em 0;
+    display: block;
+    padding: calc(2rem + .5vw);
+    box-shadow: 0 13px 27px -5px rgb(50 50 93 / 25%), 0 8px 16px -8px rgb(0 0 0 / 30%), 0 -6px 16px -6px rgb(0 0 0 / 3%);
+    transition: box-shadow .2s ease-in-out; 
+  }
+
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+   
+  }
+
+  .row {
+    display: grid;
+    grid-gap: 0 1.5em;
+    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+    padding: 0 .5em;
+    opacity: 0.8;
+   
+  }
+
+  .buttonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+    margin-top: 20px;
+  }

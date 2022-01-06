@@ -1,22 +1,26 @@
-import React from 'react';
+import  { useState } from 'react';
 import { UserContext } from '../Login/context';
 import  {useContext } from 'react';
+import {useToken} from '../../hooks/useToken';
+import ResponsiveAppBar from './ResponsiveAppBar';
+
 
 const Home = () => {
-    const { user, dispatchUserEvent, setisAutheticated, setIsAdminRole } = useContext(UserContext);
+    const { setTokenContext } = useContext(UserContext);
+    const { removeToken , getToken} = useToken();
     const handleSignout = () => {
-        dispatchUserEvent(null);
-        setisAutheticated(false);
-        setIsAdminRole(false);
-        localStorage.removeItem('token');
-        localStorage.setItem("isLogin", false);
-        localStorage.setItem("isLogin", false);
-
+        removeToken();
+        setTokenContext(null);
     }
+
+    
+
     return (
         <div>
+            <ResponsiveAppBar />
+            
             <h1>This is home page</h1>
-            <h2>jwt token is : {user}</h2>
+            <h2>jwt token is : {getToken()}</h2>
             <button onClick={handleSignout}>Sign Out</button>
         </div>
     )

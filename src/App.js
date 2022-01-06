@@ -14,25 +14,28 @@ import Unauthorized from './components/Dashboard/Unauthorized';
 import UserGuardedRoute from './components/Login/UserGuardedRoute';
 import AdminGuardedRoute from './components/Login/AdminGuardedRoute';
 import { UserContext } from './components/Login/context';
+import { useAuth } from './hooks/useAuth';
+import { Roles, useRole } from './hooks/useRole';
+import {useToken} from './hooks/useToken'
 
 function App() {
-  const[isAutheticated, setisAutheticated] = useState(JSON.parse(localStorage.getItem("isLogin")));
-  const[isAdminRole, setIsAdminRole] = useState(JSON.parse(localStorage.getItem("isAdmin")));
-  const [ user, setUser ] = useState(localStorage.getItem("token"));
-	const dispatchUserEvent = (userId) => {
-		setUser(userId)
-        console.log(userId);
-	};
+  const { getToken} = useToken();
+  const [ tokenContext, setTokenContext ] = useState(getToken());
+
+  const isAuthenticated  = useAuth();
+  const userRole = useRole();
+  const isAdmin = userRole === Roles.ROLE_ADMIN;
+
   return (
-    <UserContext.Provider value={{ user, dispatchUserEvent, setisAutheticated, setIsAdminRole }}>
+    <UserContext.Provider value={{ tokenContext, setTokenContext }}>
       <div className="App">
         <Router>
           <Switch>
-            <UserGuardedRoute path='/' component={Home} auth={isAutheticated} exact/>
-            <UserGuardedRoute path='/unauthorized' component={Unauthorized} auth={isAutheticated}/>
+            <UserGuardedRoute path='/' component={Home} auth={isAuthenticated} exact/>
+            <UserGuardedRoute path='/unauthorized' component={Unauthorized} auth={isAuthenticated}/>
             <Route path="/signin" component={SignIn} />
             <Route path="/signup" component={SignUp} />
-            <AdminGuardedRoute path='/users' component={Users} auth={isAdminRole} />
+            <AdminGuardedRoute path='/users' component={Users} auth={isAuthenticated  && isAdmin} />
             
           </Switch>
         </Router>

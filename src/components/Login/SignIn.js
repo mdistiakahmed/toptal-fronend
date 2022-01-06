@@ -18,6 +18,7 @@ import {  useHistory } from "react-router-dom";
 import { UserContext } from './context';
 import  {useContext } from 'react';
 import jwt_decode from 'jwt-decode';
+import {useToken} from '../../hooks/useToken'
 
 
 function Copyright(props) {
@@ -37,7 +38,8 @@ const theme = createTheme();
 
 export default function SignIn() {
   const history = useHistory();
-  const { user, dispatchUserEvent, setisAutheticated, setIsAdminRole } = useContext(UserContext);
+  const { setToken } = useToken();
+  const { setTokenContext } = useContext(UserContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -49,21 +51,8 @@ export default function SignIn() {
 
     axios.post('http://localhost:8080/users/authenticate', formData)
       .then(response => {
-        //console.log(response);
-        dispatchUserEvent(response.data.token);
-        setisAutheticated(true);
-        localStorage.setItem("isLogin", true);
-        localStorage.setItem("token", response.data.token);
-
-        const decoded = jwt_decode(response.data.token);
-        if(decoded.roles === 'ROLE_ADMIN,ROLE_USER') {
-          localStorage.setItem("isAdmin", true);
-          setIsAdminRole(true);
-        } else {
-          localStorage.setItem("isAdmin", false);
-          setIsAdminRole(false);
-        }
-        
+        setToken(response.data.token); 
+        setTokenContext(response.data.token);   
         history.push("/");
       })
       .catch(error => {

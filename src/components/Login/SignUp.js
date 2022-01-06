@@ -36,25 +36,20 @@ const theme = createTheme();
 export default function SignUp() {
   const history = useHistory();
   const[hasAdminRole, setHasAdminRole] = useState(false);
-  const[hasError, setHasError] = useState(false);
+  const[showAlert, setShowAlert] = useState(false);
   const[password, setPassword] = useState('');
-  const[username, setUsername] = useState('');
   //Errors
   const [errors, setErrors] = useState({});
 
   const validate = (name, value) => {
-    //A function to validate each input values
     switch (name) {
         case 'username':
             if(value.length < 4){
-                // we will set the error state
                 setErrors({
                     ...errors,
                     username:'Username should have at least have 5 letters'
                 });
             }else{
-                // set the error state empty or remove the error for username input
-                //omit function removes/omits the value from given object and returns a new object
                 let newObj = omit(errors, "username");
                 setErrors(newObj);
             }
@@ -88,14 +83,11 @@ export default function SignUp() {
         break;
         case 'confirmpassword':
             if(value !== password){
-                // we will set the error state
                 setErrors({
                     ...errors,
                     confirmpassword:'Password does not match'
                 })
             }else{
-                // set the error state empty or remove the error for username input
-                //omit function removes/omits the value from given object and returns a new object
                 let newObj = omit(errors, "confirmpassword");
                 setErrors(newObj);
             }
@@ -122,18 +114,14 @@ const handleChange = (event) => {
 }
 
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    validate('username',username);
-    console.log(errors);
-
-    return;
-    
-    validate('password',password);
-
-    console.log('jjjjj  ' + hasError);
+    if(Object.keys(errors).length > 0 || data.get('username').length===0 || data.get('password').length===0) {
+       setShowAlert(true);
+       return;
+    } 
 
     const formData = new FormData();
     formData.append("username", data.get('username'));
@@ -169,12 +157,12 @@ const handleChange = (event) => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Alert severity="warning">This is a warning alert — check it out!</Alert>
+          {showAlert && <Alert severity="warning">Provide valid information!</Alert>}
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  error={errors.username !== undefined}
+                  error={errors.username !== undefined  && errors.username.length>0}
                   helperText={errors.username}
                   required
                   fullWidth
@@ -187,7 +175,7 @@ const handleChange = (event) => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  error={errors.email}
+                  error={errors.email  !== undefined  && errors.email.length>0}
                   helperText={errors.email}
                   fullWidth
                   id="email"
@@ -199,7 +187,7 @@ const handleChange = (event) => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  error={errors.password}
+                  error={errors.password !== undefined  && errors.password.length>0}
                   helperText={errors.password}
                   required
                   fullWidth
@@ -213,7 +201,7 @@ const handleChange = (event) => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  error={errors.confirmpassword}
+                  error={errors.confirmpassword  !== undefined && errors.confirmpassword.length>0}
                   helperText={errors.confirmpassword}
                   required
                   fullWidth

@@ -40,6 +40,7 @@ const Cards = () => {
     const Item = ({item, index}) => {
         return (
             <div className="cardContainer">
+                <p>{item}</p>
                 <div className="card" key = {index}>
                     <div>
                     <Box
@@ -96,11 +97,9 @@ const Cards = () => {
     })
 
     return (
-        <div>
             <div className="row">
                  {allTimes}
             </div>
-        </div>
     )
 }
 

@@ -1,7 +1,9 @@
 *,*::after,*::before{
     box-sizing: border-box;
-
+   
   }
+
+  
 
   .clock {
     width: 200px;

@@ -15,17 +15,19 @@ import { UserContext } from '../Login/context';
 import  {useContext } from 'react';
 import {useToken} from '../../hooks/useToken';
 import { Roles, useRole } from '../../hooks/useRole';
+import {  useHistory } from "react-router-dom";
+import { Service } from '../Service/Service';
 
-const pages = ['Home', 'Users'];
-const settings = ['Logout'];
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = ({setAllCards}) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const { setTokenContext } = useContext(UserContext);
+  const { tokenContext, setTokenContext } = useContext(UserContext);
   const { removeToken } = useToken();
   const userRole = useRole();
   const isAdmin = userRole === Roles.ROLE_ADMIN;
+
+  const history = useHistory();
 
   const handleSignout = () => {
     removeToken();
@@ -46,6 +48,15 @@ const ResponsiveAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const loadData= async()=> {
+    let res =  await Service.getAllTimeZone(tokenContext);
+    setAllCards(res); 
+ }
+
+  const getAllUserData = () => {
+    loadData();
+  }
 
   return (
     <AppBar position="static">
@@ -90,11 +101,12 @@ const ResponsiveAppBar = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              <MenuItem key="1" onClick={()=>{setAnchorElNav(null); history.push("/")}} >
+                  <Typography textAlign="center">Home</Typography>
                 </MenuItem>
-              ))}
+              <MenuItem key="2" onClick={()=>{setAnchorElNav(null); history.push("/users")}}  >
+                <Typography textAlign="center">Users</Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <Typography
@@ -129,6 +141,19 @@ const ResponsiveAppBar = () => {
                 href="/users"
               >
                 Users
+            </Button>
+            }
+
+          {isAdmin && 
+            <Button
+                onClick={getAllUserData}
+                sx={{ my: 2, color: 'white', display: 'block',
+                ':hover': {
+                  bgcolor: 'black', // theme.palette.primary.main
+                  color: 'white',
+                } }}
+              >
+                All Users Data
             </Button>
             }
           

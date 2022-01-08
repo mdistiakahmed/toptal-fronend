@@ -1,7 +1,7 @@
 import React from 'react'
 import './Clock.css';
 
-const Clock = ({hourRatio, minuteRatio, secondRatio, myDate}) => {
+const Clock = ({hourRatio, minuteRatio, secondRatio,digiTime, diff}) => {
     return (
         <div>
         <div className="clock">
@@ -22,7 +22,8 @@ const Clock = ({hourRatio, minuteRatio, secondRatio, myDate}) => {
             <div className="number number11"><div>11</div></div>
             <div className="number number12"><div>12</div></div>
         </div>
-        <span>{myDate.getSeconds()}</span>
+        <p>{digiTime}</p>
+        <span> Browser Time Diff : {diff}</span>
         </div>
     )
 }

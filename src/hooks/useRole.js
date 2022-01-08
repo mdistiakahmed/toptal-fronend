@@ -13,12 +13,13 @@ export const useRole = () => {
 
     const rawToken = getToken(); 
     if(rawToken) {
-        const decoded = jwt_decode(rawToken);      
-        if(decoded.roles === 'ROLE_ADMIN,ROLE_USER'){
+        const decoded = jwt_decode(rawToken);   
+        if(decoded.roles === 'ROLE_ADMIN'){
             userRole = Roles.ROLE_ADMIN
         }else{
             userRole = Roles.ROLE_USER
         }
+        localStorage.setItem('EMAIL' , decoded.sub);
     }
 
     return userRole;

@@ -36,3 +36,11 @@
     flex-direction: row;
     margin-top: 20px;
   }
+
+  .secondContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-top: 20px;
+  }

@@ -43,13 +43,13 @@ export default function SignIn() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const inputdata = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    const formData = new FormData();
-    formData.append("username", data.get('username'));
-    formData.append("password", data.get('password'));
+    const data = {  email: inputdata.get('email'),
+                    password: inputdata.get('password')
+                  };
 
-    axios.post('http://localhost:8080/users/authenticate', formData)
+    axios.post('http://localhost:8080/users/authenticate', data)
       .then(response => {
         setToken(response.data.token); 
         setTokenContext(response.data.token);   
@@ -83,10 +83,10 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="User Name"
-              name="username"
-              autoComplete="username"
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
               autoFocus
             />
             <TextField

@@ -5,7 +5,7 @@ export const useToken = ()=> {
     }
 
     const setToken = (tokenToSave) => {
-        localStorage.setItem('AUTH_TOKEN' , tokenToSave ?? "abc" )
+        localStorage.setItem('AUTH_TOKEN' , tokenToSave ?? "" )
     }
 
     const removeToken = () => {

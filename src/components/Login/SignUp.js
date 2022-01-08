@@ -35,7 +35,6 @@ const theme = createTheme();
 
 export default function SignUp() {
   const history = useHistory();
-  const[hasAdminRole, setHasAdminRole] = useState(false);
   const[showAlert, setShowAlert] = useState(false);
   const[password, setPassword] = useState('');
   //Errors
@@ -43,17 +42,6 @@ export default function SignUp() {
 
   const validate = (name, value) => {
     switch (name) {
-        case 'username':
-            if(value.length < 4){
-                setErrors({
-                    ...errors,
-                    username:'Username should have at least have 5 letters'
-                });
-            }else{
-                let newObj = omit(errors, "username");
-                setErrors(newObj);
-            }
-            break;
         case 'email':
             if(
                 !new RegExp( /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(value)
@@ -116,20 +104,18 @@ const handleChange = (event) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    if(Object.keys(errors).length > 0 || data.get('username').length===0 || data.get('password').length===0) {
+    const inputdata = new FormData(event.currentTarget);
+    if(Object.keys(errors).length > 0 || inputdata.get('password').length===0) {
        setShowAlert(true);
        return;
     } 
 
-    const formData = new FormData();
-    formData.append("username", data.get('username'));
-    formData.append("password", data.get('password'));
-    formData.append("email", data.get('email'));
-    formData.append("hasAdminRole", hasAdminRole);
+    const data = {  email: inputdata.get('email'),
+                    password: inputdata.get('password')
+                  };
 
-    axios.post('http://localhost:8080/users/register', formData)
+    console.log(data);
+    axios.post('http://localhost:8080/users/register', data)
       .then(response => {
         console.log(response);
         history.push("/signin");
@@ -160,19 +146,6 @@ const handleChange = (event) => {
           {showAlert && <Alert severity="warning">Provide valid information!</Alert>}
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  error={errors.username !== undefined  && errors.username.length>0}
-                  helperText={errors.username}
-                  required
-                  fullWidth
-                  id="username"
-                  label="User Name"
-                  name="username"
-                  autoComplete="username"
-                  onChange={handleChange}
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   error={errors.email  !== undefined  && errors.email.length>0}
@@ -211,12 +184,6 @@ const handleChange = (event) => {
                   id="confirmpassword"
                   autoComplete="new-password"
                   onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox onChange={()=> setHasAdminRole(!hasAdminRole)} id="hasAdminRole" value="hasAdminRole" color="primary" />}
-                  label="Admin Account"
                 />
               </Grid>
             </Grid>

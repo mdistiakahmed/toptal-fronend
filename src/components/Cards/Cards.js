@@ -11,26 +11,11 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import Stack from '@mui/material/Stack';
 import { Service } from '../Service/Service';
 import { UserContext} from '../Login/context';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { InfoModal } from '../Modals/InfoModal';
+import { ConfirmationModal } from '../Modals/ConfirmationModal';
 
-
-const pages = ['Dhaka', 'Chittagong']; // Api response will be put in this
 
 const Cards = ({allCards,setAllCards}) => {
-
-    console.log('In cards');
-    console.log(allCards);
-
-    const x = allCards.map((page,index) =>{
-        console.log('HI');
-        console.log(page);
-    })
-   
-    
     const allTimes = allCards.map((page,index) =>{
         return (
             <Item item={page} key={index} setAllCards={setAllCards} />
@@ -197,12 +182,20 @@ const ClockSection = ({item }) => {
          setHourRatio(hourRatio1);
          setDigiTime(convertedDate.getHours() + " : " + convertedDate.getMinutes() + " : " + convertedDate.getSeconds());
     
+         let timeDiff = "+";
          let diffBetweenBrowserTime =  (convertedDate - currentDate);// in milli
+         if(diffBetweenBrowserTime > 0) {
+            timeDiff = "-" ;
+         }
          const hh = Math.floor(Math.abs(diffBetweenBrowserTime) / 3600000);
          diffBetweenBrowserTime = Math.abs(diffBetweenBrowserTime) - (hh * 3600000);
          const mm = Math.floor(diffBetweenBrowserTime/ 60000);
-         if(diffBetweenBrowserTime < 0) hh = hh * (-1);
-         setDiff(hh+ " : " + mm + " (hh:mm)");
+         timeDiff = timeDiff +  "( " + hh + " : " + mm + " )"
+         if(diffBetweenBrowserTime < 0) {
+             timeDiff = "-" + timeDiff;
+             console.log('here');
+         }
+         setDiff(timeDiff);
     }
 
     useEffect(() => {
@@ -222,70 +215,9 @@ const ClockSection = ({item }) => {
 }
 
 
-const ConfirmationModal = ({title, yesAction, noAction}) => {
-    const[open, setOpen] = useState(true);
-
-    const handleClose = () => {
-        setOpen(false);
-        noAction(false);
-    };
-
-    const handleYesClick = () => {
-        noAction(false);
-        yesAction();
-    }
-    return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle id="alert-dialog-title">
-                {"Confirmation !"}
-            </DialogTitle>
-            <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-                {title}
-            </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => noAction(false) }>No</Button>
-                <Button onClick={handleYesClick} autoFocus> Yes </Button>
-        </DialogActions>
-    </Dialog>
-    )
-}
 
 
-const InfoModal = ({title, setCloseModal}) => {
-    const[open, setOpen] = useState(true);
 
-    const handleOk = () => {
-        setOpen(false);
-        setCloseModal(false);
-    }
-    return (
-        <Dialog
-            open={open}
-            onClose={handleOk}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle id="alert-dialog-title">
-                {"Hey !"}
-            </DialogTitle>
-            <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-                {title}
-            </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleOk}>Got it</Button>
-        </DialogActions>
-    </Dialog>
-    )
-}
 
 
 export default Cards

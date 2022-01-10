@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,12 +11,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { Route, Redirect } from "react-router-dom";
 import {  useHistory } from "react-router-dom";
 import { UserContext } from './context';
 import  {useContext } from 'react';
-import jwt_decode from 'jwt-decode';
 import {useToken} from '../../hooks/useToken'
+import Alert from '@mui/material/Alert';
+import {useState } from 'react'
 
 
 function Copyright(props) {
@@ -40,6 +38,7 @@ export default function SignIn() {
   const history = useHistory();
   const { setToken } = useToken();
   const { setTokenContext } = useContext(UserContext);
+  const [signInHasError, setSignInHasError] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -56,7 +55,7 @@ export default function SignIn() {
         history.push("/");
       })
       .catch(error => {
-        alert(error);
+        setSignInHasError(true);
       });
   };
 
@@ -78,6 +77,13 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+
+          {signInHasError &&
+           <Alert severity="warning">
+            Invalid Email or Password
+          </Alert>
+          }
+
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"

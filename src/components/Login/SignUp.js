@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -17,6 +15,7 @@ import {  useHistory } from "react-router-dom";
 import axios from 'axios';
 import  { useState } from 'react';
 import {omit} from 'lodash';
+import {InfoModal} from './../Modals/InfoModal'
 
 function Copyright(props) {
   return (
@@ -39,6 +38,7 @@ export default function SignUp() {
   const[password, setPassword] = useState('');
   //Errors
   const [errors, setErrors] = useState({});
+  
 
   const validate = (name, value) => {
     switch (name) {
@@ -91,7 +91,6 @@ const handleChange = (event) => {
   //To stop default events    
   event.persist();
 
-  console.log('on change');
   let name = event.target.name;
   let val = event.target.value;
   if(name === 'password') {
@@ -114,10 +113,8 @@ const handleChange = (event) => {
                     password: inputdata.get('password')
                   };
 
-    console.log(data);
     axios.post('http://localhost:8080/users/register', data)
       .then(response => {
-        console.log(response);
         history.push("/signin");
       })
       .catch(error => {
@@ -129,6 +126,7 @@ const handleChange = (event) => {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+
         <Box
           sx={{
             marginTop: 8,

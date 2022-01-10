@@ -49,14 +49,7 @@ const ResponsiveAppBar = ({setAllCards}) => {
     setAnchorElUser(null);
   };
 
-  const loadData= async()=> {
-    let res =  await Service.getAllTimeZone(tokenContext);
-    setAllCards(res); 
- }
-
-  const getAllUserData = () => {
-    loadData();
-  }
+  
 
   return (
     <AppBar position="static">
@@ -104,10 +97,13 @@ const ResponsiveAppBar = ({setAllCards}) => {
               <MenuItem key="1" onClick={()=>{setAnchorElNav(null); history.push("/")}} >
                   <Typography textAlign="center">Home</Typography>
                 </MenuItem>
+              {isAdmin && 
               <MenuItem key="2" onClick={()=>{setAnchorElNav(null); history.push("/users")}}  >
                 <Typography textAlign="center">Users</Typography>
               </MenuItem>
-            </Menu>
+              }
+              </Menu>
+
           </Box>
           <Typography
             color="common.white"
@@ -141,19 +137,6 @@ const ResponsiveAppBar = ({setAllCards}) => {
                 href="/users"
               >
                 Users
-            </Button>
-            }
-
-          {isAdmin && 
-            <Button
-                onClick={getAllUserData}
-                sx={{ my: 2, color: 'white', display: 'block',
-                ':hover': {
-                  bgcolor: 'black', // theme.palette.primary.main
-                  color: 'white',
-                } }}
-              >
-                All Users Data
             </Button>
             }
           

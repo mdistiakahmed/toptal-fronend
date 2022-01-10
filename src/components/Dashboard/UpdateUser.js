@@ -24,9 +24,8 @@ const useStyles = makeStyles({
 const UpdateUser = ({rows,setRows}) => {
     const classes = useStyles();
     const { tokenContext} = useContext(UserContext);
-    const { email, setEmail,isAdmin,setIsAdmin,updateMode, setUpdateMode,oldEmail} = useContext(UserIdContext);
+    const { email, setEmail,isAdmin,setIsAdmin, setUpdateMode,oldEmail} = useContext(UserIdContext);
     let currEmail = email;
-    let isAdminSelected = isAdmin;
 
     const onEmailChange =(e) => {
       e.preventDefault()
@@ -45,8 +44,6 @@ const UpdateUser = ({rows,setRows}) => {
 
     const handleUpdate = (e) => {
         e.preventDefault();
-        console.log(oldEmail);
-        console.log(email);
         if(currEmail.length === 0 ) {
             alert('Email is empty !');
             return ;

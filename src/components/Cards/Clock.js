@@ -22,8 +22,9 @@ const Clock = ({hourRatio, minuteRatio, secondRatio,digiTime, diff}) => {
             <div className="number number11"><div>11</div></div>
             <div className="number number12"><div>12</div></div>
         </div>
+        
         <p>{digiTime}</p>
-        <span> Browser Time Diff : {diff}</span>
+        <span> Browser Time Diff  {diff}</span>
         </div>
     )
 }

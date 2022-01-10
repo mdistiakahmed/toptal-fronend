@@ -5,10 +5,9 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
-import { UserIdContext } from './Users';
-import {omit} from 'lodash';
 import { Service } from '../Service/Service';
 import { UserContext} from '../Login/context';
+import {InfoModal} from '../Modals/InfoModal';
 
 const useStyles = makeStyles({
     container: {
@@ -28,9 +27,10 @@ const AddUser = ({rows,setRows}) => {
     const [email , setEmail] = useState('');
     const [password , setPassword] = useState('');
     const [isAdmin , setIsAdmin] = useState(true);
+    const [hasError, setHasError] = useState(false);
     const { tokenContext} = useContext(UserContext);
-     //Errors
-    const [errors, setErrors] = useState('');
+
+    const errorMsg = 'Email or Password Should Not Be Empty'
 
     const onEmailChange =(e) => {
       e.preventDefault()
@@ -44,7 +44,6 @@ const AddUser = ({rows,setRows}) => {
 
     const submitAndGetAllUser = async()=> {
       let res =  await Service.addNewUser(email,password,isAdmin, tokenContext);
-      console.log();
       res =  await Service.getAllUsers(tokenContext);
       setEmail('');
       setPassword('');
@@ -55,21 +54,18 @@ const AddUser = ({rows,setRows}) => {
 
     const handleAdd = (e) => {
         e.preventDefault();
-        console.log(email);
-        console.log(password);
-        console.log(isAdmin);
         if(email.length === 0 || password.length === 0) {
-          alert('Email or Password field is empty');
+          setHasError(true);
           return;
         } else {
-          //let res =  await Service.getAllUsers(tokenContext);
-          //setRows(res);
           submitAndGetAllUser();
         }
     };
 
     return (
         <div className={classes.secondContainer} spacing={2} >
+          {hasError && <InfoModal title={errorMsg} setCloseModal={setHasError}/> }
+          
                 <TextField
                   value={email}
                   onChange={onEmailChange}

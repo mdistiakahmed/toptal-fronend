@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
 import { UserContext} from '../Login/context';
 import { Service } from '../Service/Service';
+import { InfoModal } from '../Modals/InfoModal';
 
 const useStyles = makeStyles({
     container: {
@@ -25,7 +26,14 @@ const AddTimeZone = ({setAllCards}) => {
     const [city , setCity] = useState('');
     const [hourDiff , setHourDiff] = useState(0);
     const [minDiff , setMinDiff] = useState(0);
+    const [nameCityError , setNameCityError] = useState(false);
+    const [hourError , setHourError] = useState(false);
+    const [minError , setMinError] = useState(false);
     const { tokenContext} = useContext(UserContext);
+
+    const nameCityBlankMsg = 'Name or City Should not be empty';
+    const hourRangeViolationMsg = 'Hour Difference should be between -14 to +12';
+    const minRangeViolationMsg = 'Hour Difference should be between -14 to +12';
 
     const submitAndGetAllTimeZones = async()=> {
         let res =  await Service.addNewTimeZone(name,city,hourDiff, minDiff,tokenContext);
@@ -35,17 +43,17 @@ const AddTimeZone = ({setAllCards}) => {
 
     const handleAdd = () => {
         if(name.length === 0 || city.length === 0) {
-            alert('Add a name and city');
+            setNameCityError(true);
             return;
         }
 
         if(hourDiff<-14 || hourDiff>12) {
-            alert('Hour Difference should be between -14 to +12');
+            setHourError(true);
             return ;
         }
 
         if(minDiff<0 || minDiff>59) {
-            alert('Minute Difference should be between 0 to 59');
+            setMinError(true);
             return ;
         }
          
@@ -79,12 +87,13 @@ const AddTimeZone = ({setAllCards}) => {
                 break;
         }
 
-        console.log(name);
-        console.log(hourDiff);
     }
 
     return (
         <Box  noValidate   className={classes.container} >
+            {nameCityError  && <InfoModal title={nameCityBlankMsg} setCloseModal={setNameCityError}/>}
+            {hourError  && <InfoModal title={hourRangeViolationMsg} setCloseModal={setHourError}/>}
+            {minError  && <InfoModal title={minRangeViolationMsg} setCloseModal={setMinError}/>}
             <div className={classes.secondContainer} spacing={2} >
                 <TextField
                   value={name}

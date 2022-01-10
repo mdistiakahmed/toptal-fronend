@@ -1,6 +1,5 @@
 import axios from 'axios'
 import jwt_decode from 'jwt-decode';
-import {useToken} from './../../hooks/useToken'
 
 export class Service {
     static getAllUsers(token) {
@@ -37,9 +36,7 @@ export class Service {
                 let result = res.data;
                 resolve(result)
             }).catch(error => {
-                if( error.response ){
-                    console.log(error.response.data); // => the response payload 
-                }
+
             });
         });
     }
@@ -80,7 +77,6 @@ export class Service {
     }
 
     static addNewTimeZone(name, city, hourDiff,minDiff, token) {
-        console.log('add new timezone');
         const rowToken = localStorage.getItem('AUTH_TOKEN')??"";
         const decoded = jwt_decode(rowToken); 
 
@@ -89,7 +85,7 @@ export class Service {
             name: name,
             city: city,
             hourDiff: hourDiff,
-            minDiff,minDiff,
+            minDiff: minDiff,
         };
 
         return new Promise(resolve => {
@@ -122,7 +118,6 @@ export class Service {
                 .then(res => {
                     
                     let result = res.data;
-                    console.log(result);
                     resolve(result)
                 })
         });
@@ -136,7 +131,6 @@ export class Service {
              { headers: { "Authorization": `Bearer ${token}` } })
              .then(res => {
                 let result = res.data;
-                console.log(result);
                 resolve(result)
             })
 
@@ -170,10 +164,8 @@ export class Service {
             axios.get('http://localhost:8080/timezones/getAllTimeZone', {
                 headers: { "Authorization": `Bearer ${token}` }
             })
-                .then(res => {
-                    
+                .then(res => {                   
                     let result = res.data;
-                    console.log(result);
                     resolve(result)
                 })
         });

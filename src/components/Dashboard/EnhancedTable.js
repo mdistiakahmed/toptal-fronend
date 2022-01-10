@@ -19,10 +19,12 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { visuallyHidden } from '@mui/utils';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { UserIdContext } from './Users';
 import { UserContext} from '../Login/context';
 import { Service } from '../Service/Service';
+import {ConfirmationModal} from '../Modals/ConfirmationModal';
+import {useState} from 'react'
 
 
 function descendingComparator(a, b, orderBy) {
@@ -116,10 +118,10 @@ EnhancedTableHead.propTypes = {
 const EnhancedTableToolbar = ({numSelected, selected,setSelected, rows, setRows}) => {
     const { setEmail, setUpdateMode, setOldEmail} = useContext(UserIdContext);
     const { tokenContext} = useContext(UserContext);
+    const [showDeleteModal , setShowDeleteModal] = useState(false);
 
     useEffect(() => {
         if(numSelected===0 || numSelected>1) {
-            console.log('use effect in enhaced table tool bar');
             setEmail('');
             setUpdateMode(false);
         }
@@ -134,7 +136,6 @@ const EnhancedTableToolbar = ({numSelected, selected,setSelected, rows, setRows}
      }
 
    const handleDeleteRows = () => {
-        console.log('in here');
         deleteAndLoad();
     };
     
@@ -169,11 +170,11 @@ const EnhancedTableToolbar = ({numSelected, selected,setSelected, rows, setRows}
         </Typography>
       )}
 
-
+      {showDeleteModal && <ConfirmationModal title={'Sure You want to delete'} yesAction={handleDeleteRows} noAction={setShowDeleteModal}/>}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={handleDeleteRows}>
+          <IconButton onClick={()=> setShowDeleteModal(true) }>
             <DeleteIcon />
           </IconButton>
         </Tooltip>)
